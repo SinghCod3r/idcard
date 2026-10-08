@@ -1,0 +1,269 @@
+{
+  "students": [
+    {
+      "id": "40ed2c67-91ba-46b0-a04a-055a02e83fdd",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "academic_session_id": "aedf82f8-388f-49df-9830-ce3a4a4edf00",
+      "class_id": "8ea22fad-6793-48a1-b975-83c160289662",
+      "section_id": "72d7a27c-2f78-4055-9945-234cc5edd5cd",
+      "full_name": "Aarav Sharma",
+      "date_of_birth": "2011-04-11T18:30:00.000Z",
+      "gender": "MALE",
+      "blood_group": null,
+      "father_name": "Rakesh Sharma",
+      "mother_name": null,
+      "guardian_name": null,
+      "phone": "+91 90000 00001",
+      "address": null,
+      "admission_number": "ABC-2026-001",
+      "roll_number": "10",
+      "registration_number": null,
+      "course": null,
+      "status": "APPROVED",
+      "card_status": "READY_FOR_PRINT",
+      "rejection_reason": null,
+      "is_archived": false,
+      "created_by": "1b044c11-de9a-4474-919e-06eaf179a5a4",
+      "created_at": "2026-10-07T12:08:04.392Z",
+      "updated_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "abf5dd21-5a1a-4bf7-9870-08378c520e9d",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "academic_session_id": "aedf82f8-388f-49df-9830-ce3a4a4edf00",
+      "class_id": "8ea22fad-6793-48a1-b975-83c160289662",
+      "section_id": "d13941cc-981d-41f9-82a7-c13365b5a628",
+      "full_name": "Diya Patel",
+      "date_of_birth": "2011-09-29T18:30:00.000Z",
+      "gender": "FEMALE",
+      "blood_group": null,
+      "father_name": "Nilesh Patel",
+      "mother_name": null,
+      "guardian_name": null,
+      "phone": "+91 90000 00002",
+      "address": null,
+      "admission_number": "ABC-2026-002",
+      "roll_number": "11",
+      "registration_number": null,
+      "course": null,
+      "status": "SUBMITTED",
+      "card_status": "PENDING",
+      "rejection_reason": null,
+      "is_archived": false,
+      "created_by": "3191a434-5232-4c9c-8d34-f1ec1262276e",
+      "created_at": "2026-10-07T12:08:04.392Z",
+      "updated_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "0d5b9d1f-9763-49d2-b4dc-b3c9137d1fc7",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "academic_session_id": "aedf82f8-388f-49df-9830-ce3a4a4edf00",
+      "class_id": "30b0f2d8-7841-447d-a3c1-666a16a3a7cd",
+      "section_id": "92a88d17-6481-4c69-a29f-62c25cbd655f",
+      "full_name": "Kabir Singh",
+      "date_of_birth": "2010-01-20T18:30:00.000Z",
+      "gender": "MALE",
+      "blood_group": null,
+      "father_name": "Harpreet Singh",
+      "mother_name": null,
+      "guardian_name": null,
+      "phone": "+91 90000 00003",
+      "address": null,
+      "admission_number": "ABC-2026-003",
+      "roll_number": "08",
+      "registration_number": null,
+      "course": null,
+      "status": "DRAFT",
+      "card_status": "PENDING",
+      "rejection_reason": null,
+      "is_archived": false,
+      "created_by": "3191a434-5232-4c9c-8d34-f1ec1262276e",
+      "created_at": "2026-10-07T12:08:04.392Z",
+      "updated_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "489e9325-311a-47af-8aa3-ad359961a05c",
+      "college_id": "5bcd4bb4-431b-48c2-93f8-42c4dfad9e98",
+      "academic_session_id": "369cb535-6654-41ff-8a50-835b9b7f4732",
+      "class_id": "5657da6d-c64f-4911-90c6-0a3aab0cc100",
+      "section_id": "a91542b4-7c8b-4bf5-bb65-ad35911afe6b",
+      "full_name": "Isha Verma",
+      "date_of_birth": "2008-07-06T18:30:00.000Z",
+      "gender": "FEMALE",
+      "blood_group": null,
+      "father_name": "Sanjay Verma",
+      "mother_name": null,
+      "guardian_name": null,
+      "phone": "+91 90000 00010",
+      "address": null,
+      "admission_number": "XYZ-2026-001",
+      "roll_number": "CS-04",
+      "registration_number": null,
+      "course": null,
+      "status": "APPROVED",
+      "card_status": "PRINTED",
+      "rejection_reason": null,
+      "is_archived": false,
+      "created_by": null,
+      "created_at": "2026-10-07T12:08:04.392Z",
+      "updated_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "483a52aa-06b8-4ca9-b55d-e95ea54d3a96",
+      "college_id": "5bcd4bb4-431b-48c2-93f8-42c4dfad9e98",
+      "academic_session_id": "369cb535-6654-41ff-8a50-835b9b7f4732",
+      "class_id": "5657da6d-c64f-4911-90c6-0a3aab0cc100",
+      "section_id": "151996a4-09e3-4d88-9b46-1a69ad0319d1",
+      "full_name": "Rohan Das",
+      "date_of_birth": "2008-02-18T18:30:00.000Z",
+      "gender": "MALE",
+      "blood_group": null,
+      "father_name": "Pranab Das",
+      "mother_name": null,
+      "guardian_name": null,
+      "phone": "+91 90000 00011",
+      "address": null,
+      "admission_number": "XYZ-2026-002",
+      "roll_number": "CS-05",
+      "registration_number": null,
+      "course": null,
+      "status": "UNDER_REVIEW",
+      "card_status": "PENDING",
+      "rejection_reason": null,
+      "is_archived": false,
+      "created_by": null,
+      "created_at": "2026-10-07T12:08:04.392Z",
+      "updated_at": "2026-10-07T12:08:04.392Z"
+    }
+  ],
+  "sections": [
+    {
+      "id": "72d7a27c-2f78-4055-9945-234cc5edd5cd",
+      "class_id": "8ea22fad-6793-48a1-b975-83c160289662",
+      "name": "A",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "d13941cc-981d-41f9-82a7-c13365b5a628",
+      "class_id": "8ea22fad-6793-48a1-b975-83c160289662",
+      "name": "B",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "e0ee33ff-de40-4874-b849-5a515afb4082",
+      "class_id": "8ea22fad-6793-48a1-b975-83c160289662",
+      "name": "C",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "92a88d17-6481-4c69-a29f-62c25cbd655f",
+      "class_id": "30b0f2d8-7841-447d-a3c1-666a16a3a7cd",
+      "name": "A",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "faceab3f-9d97-40cb-b178-44623437a15e",
+      "class_id": "30b0f2d8-7841-447d-a3c1-666a16a3a7cd",
+      "name": "B",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "d6dd0ec8-7a1d-4aff-a119-88fdaae19868",
+      "class_id": "30b0f2d8-7841-447d-a3c1-666a16a3a7cd",
+      "name": "C",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "a91542b4-7c8b-4bf5-bb65-ad35911afe6b",
+      "class_id": "5657da6d-c64f-4911-90c6-0a3aab0cc100",
+      "name": "A",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "151996a4-09e3-4d88-9b46-1a69ad0319d1",
+      "class_id": "5657da6d-c64f-4911-90c6-0a3aab0cc100",
+      "name": "B",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "b57bcdf2-db19-4065-ad0e-d1b55a3316da",
+      "class_id": "49d748d1-5ad9-437c-9fbb-51bd76963ab4",
+      "name": "A",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "3576912a-d967-47c9-80ac-cced069c36fa",
+      "class_id": "49d748d1-5ad9-437c-9fbb-51bd76963ab4",
+      "name": "B",
+      "created_at": "2026-10-07T12:08:04.392Z"
+    }
+  ],
+  "classes": [
+    {
+      "id": "8ea22fad-6793-48a1-b975-83c160289662",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "name": "Class 10",
+      "order_index": 1,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "30b0f2d8-7841-447d-a3c1-666a16a3a7cd",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "name": "Class 11",
+      "order_index": 2,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "5657da6d-c64f-4911-90c6-0a3aab0cc100",
+      "college_id": "5bcd4bb4-431b-48c2-93f8-42c4dfad9e98",
+      "name": "B.Tech CSE 1st Year",
+      "order_index": 1,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "49d748d1-5ad9-437c-9fbb-51bd76963ab4",
+      "college_id": "5bcd4bb4-431b-48c2-93f8-42c4dfad9e98",
+      "name": "B.Tech CSE 2nd Year",
+      "order_index": 2,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    }
+  ],
+  "academic_sessions": [
+    {
+      "id": "aedf82f8-388f-49df-9830-ce3a4a4edf00",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "name": "2026-27",
+      "start_date": "2026-05-31T18:30:00.000Z",
+      "end_date": "2027-05-30T18:30:00.000Z",
+      "is_active": true,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "4fbdcfa5-f012-4a9f-bbdd-b6d4cea072a6",
+      "college_id": "e8da1f6a-a620-48a0-bfb4-bb16bcf4261a",
+      "name": "2025-26",
+      "start_date": "2025-05-31T18:30:00.000Z",
+      "end_date": "2026-05-30T18:30:00.000Z",
+      "is_active": false,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "369cb535-6654-41ff-8a50-835b9b7f4732",
+      "college_id": "5bcd4bb4-431b-48c2-93f8-42c4dfad9e98",
+      "name": "2026-27",
+      "start_date": "2026-05-31T18:30:00.000Z",
+      "end_date": "2027-05-30T18:30:00.000Z",
+      "is_active": true,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    },
+    {
+      "id": "3bf03991-0ab6-42ed-b4bb-b8703f1f2eab",
+      "college_id": "5bcd4bb4-431b-48c2-93f8-42c4dfad9e98",
+      "name": "2025-26",
+      "start_date": "2025-05-31T18:30:00.000Z",
+      "end_date": "2026-05-30T18:30:00.000Z",
+      "is_active": false,
+      "created_at": "2026-10-07T12:08:04.392Z"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"_tag":"Error","error":{"code":"DockerRunError","message":"failed to inspect docker image: failed to connect to the docker API at unix:///var/run/docker.sock; check if the path is correct and if the daemon is running: dial unix /var/run/docker.sock: connect: no such file or directory"}}
