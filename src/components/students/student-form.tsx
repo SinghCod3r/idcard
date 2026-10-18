@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { Loader2, Camera, Image as ImageIcon, User } from 'lucide-react'
+import { Loader2, Camera, Image as ImageIcon, User, Sparkles } from 'lucide-react'
 
 import { Button, buttonVariants } from '@/components/ui/button'
 import {
@@ -15,6 +15,7 @@ import { EMPTY_STATE, type ActionState } from '@/lib/forms/state'
 import type { MyClass, Student } from '@/types'
 import { CameraModal } from '@/components/students/camera-modal'
 import { toast } from '@/components/ui/toast'
+import { compressImage } from '@/lib/media/compress-image'
 
 export function StudentForm({
   action,
@@ -65,12 +66,38 @@ export function StudentForm({
 
 
   const [activeFile, setActiveFile] = useState<File | null>(null)
+  const [isOptimizing, setIsOptimizing] = useState(false)
+  const [optimizationInfo, setOptimizationInfo] = useState<{
+    originalKb: number
+    compressedKb: number
+    reduction: number
+  } | null>(null)
+
+  const processAndSetPhoto = async (rawFile: File) => {
+    setIsOptimizing(true)
+    try {
+      const result = await compressImage(rawFile)
+      setActiveFile(result.file)
+      setPreviewUrl(URL.createObjectURL(result.file))
+      setOptimizationInfo({
+        originalKb: Math.max(1, Math.round(result.originalSize / 1024)),
+        compressedKb: Math.max(1, Math.round(result.compressedSize / 1024)),
+        reduction: result.reductionPercentage,
+      })
+    } catch (err) {
+      console.warn('[Photo Optimizer] Compression fallback to raw file:', err)
+      setActiveFile(rawFile)
+      setPreviewUrl(URL.createObjectURL(rawFile))
+      setOptimizationInfo(null)
+    } finally {
+      setIsOptimizing(false)
+    }
+  }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (file) {
-      setActiveFile(file)
-      setPreviewUrl(URL.createObjectURL(file))
+      void processAndSetPhoto(file)
     }
   }
 
@@ -175,10 +202,16 @@ export function StudentForm({
         </div>
         
         {/* Photo Preview Right Side */}
-        <div className="flex flex-col items-center justify-center space-y-4 rounded-lg border border-dashed p-4">
+        <div className="flex flex-col items-center justify-center space-y-3 rounded-lg border border-dashed p-4 text-center">
           <p className="text-sm font-medium text-muted-foreground">Photo Preview</p>
-          <div className="flex h-48 w-40 overflow-hidden rounded-md border bg-muted shadow-sm">
-            {previewUrl ? (
+          <div className="relative flex h-48 w-40 overflow-hidden rounded-md border bg-muted shadow-sm">
+            {isOptimizing ? (
+              <div className="flex h-full w-full flex-col items-center justify-center bg-muted/80 p-3 text-center">
+                <Loader2 className="size-6 animate-spin text-blue-600 mb-2" />
+                <span className="text-xs font-semibold">Optimizing photo...</span>
+                <span className="text-[10px] text-muted-foreground">Compressing to KB</span>
+              </div>
+            ) : previewUrl ? (
               /* eslint-disable-next-line @next/next/no-img-element */
               <img 
                 src={previewUrl} 
@@ -192,15 +225,22 @@ export function StudentForm({
               </div>
             )}
           </div>
+
+          {optimizationInfo && !isOptimizing && (
+            <div className="flex items-center gap-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
+              <Sparkles className="size-3 shrink-0" />
+              <span>Photo optimized • {optimizationInfo.compressedKb} KB ({optimizationInfo.reduction}% smaller)</span>
+            </div>
+          )}
         </div>
       </fieldset>
 
       <FormAlerts state={state} />
 
       <div className="flex flex-wrap items-center gap-3">
-        <Button type="submit" disabled={isPending || noAcademicSetup}>
-          {isPending && <Loader2 className="animate-spin" aria-hidden="true" />}
-          {student ? 'Save changes' : 'Create student'}
+        <Button type="submit" disabled={isPending || noAcademicSetup || isOptimizing}>
+          {(isPending || isOptimizing) && <Loader2 className="animate-spin" aria-hidden="true" />}
+          {isOptimizing ? 'Optimizing photo...' : student ? 'Save changes' : 'Create student'}
         </Button>
         <Link href={cancelHref} className={buttonVariants({ variant: 'ghost' })}>
           Cancel
@@ -211,10 +251,7 @@ export function StudentForm({
         isOpen={isCameraOpen} 
         onClose={() => setIsCameraOpen(false)} 
         onCapture={(file) => {
-          // Set the preview URL
-          setPreviewUrl(URL.createObjectURL(file))
-          // Save the file to state so handleAction can append it to FormData
-          setActiveFile(file)
+          void processAndSetPhoto(file)
         }} 
       />
     </form>
