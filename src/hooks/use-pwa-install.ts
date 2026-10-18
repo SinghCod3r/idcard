@@ -40,3 +40,4 @@ export function usePWAInstall(): PWAContextValue {
   }
   return context
 }
+

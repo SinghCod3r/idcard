@@ -75,3 +75,4 @@ export function DownloadAppButton({ onCloseSidebar, className }: DownloadAppButt
     </button>
   )
 }
+

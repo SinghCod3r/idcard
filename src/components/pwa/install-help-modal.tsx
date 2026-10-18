@@ -82,3 +82,4 @@ export function InstallHelpModal({ isOpen, onClose }: InstallHelpModalProps) {
     </div>
   )
 }
+

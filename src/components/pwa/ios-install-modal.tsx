@@ -99,3 +99,4 @@ export function IOSInstallModal({ isOpen, onClose }: IOSInstallModalProps) {
     </div>
   )
 }
+
