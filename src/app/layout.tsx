@@ -40,6 +40,40 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  window.__deferredPrompt = null;
+                  window.addEventListener('beforeinstallprompt', function(e) {
+                    e.preventDefault();
+                    window.__deferredPrompt = e;
+                    console.log('[PWA] beforeinstallprompt fired early in head');
+                    console.log('[PWA] install prompt available:', true);
+                    window.dispatchEvent(new Event('pwa-prompt-ready'));
+                  });
+                  window.addEventListener('appinstalled', function() {
+                    window.__deferredPrompt = null;
+                    console.log('[PWA] appinstalled fired');
+                    window.dispatchEvent(new Event('pwa-installed'));
+                  });
+                  if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
+                    navigator.serviceWorker.register('/sw.js', { scope: '/' })
+                      .then(function(reg) {
+                        console.log('[PWA] SW registered in head, scope:', reg.scope);
+                      })
+                      .catch(function(err) {
+                        console.warn('[PWA] SW registration in head failed:', err);
+                      });
+                  }
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
+      </head>
       <body className={`${inter.variable} font-sans antialiased h-full flex flex-col`}>
         <PWAProvider>
           <NextTopLoader color="#3b82f6" showSpinner={false} />

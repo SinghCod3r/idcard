@@ -18,8 +18,45 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>
 }
 
+// Module-level persistent cache for deferred prompt
+let globalDeferredPrompt: BeforeInstallPromptEvent | null = null
+
+// Attach module-level listener immediately when script executes in the browser
+if (typeof window !== 'undefined') {
+  const win = window as unknown as { __deferredPrompt?: BeforeInstallPromptEvent }
+  if (win.__deferredPrompt) {
+    globalDeferredPrompt = win.__deferredPrompt
+    console.log('[PWA] beforeinstallprompt fired')
+    console.log('[PWA] install prompt available:', true)
+  }
+
+  window.addEventListener('beforeinstallprompt', (e: Event) => {
+    e.preventDefault()
+    const promptEvent = e as BeforeInstallPromptEvent
+    globalDeferredPrompt = promptEvent
+    ;(window as unknown as { __deferredPrompt: BeforeInstallPromptEvent }).__deferredPrompt = promptEvent
+    console.log('[PWA] beforeinstallprompt fired')
+    console.log('[PWA] install prompt available:', true)
+    window.dispatchEvent(new Event('pwa-prompt-ready'))
+  })
+
+  window.addEventListener('appinstalled', () => {
+    globalDeferredPrompt = null
+    ;(window as unknown as { __deferredPrompt: null }).__deferredPrompt = null
+    console.log('[PWA] app installed')
+    window.dispatchEvent(new Event('pwa-installed'))
+  })
+}
+
 export function PWAProvider({ children }: { children: React.ReactNode }) {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null)
+  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(() => {
+    if (typeof window !== 'undefined') {
+      const win = window as unknown as { __deferredPrompt?: BeforeInstallPromptEvent }
+      return globalDeferredPrompt || win.__deferredPrompt || null
+    }
+    return null
+  })
+
   const [isInstallable, setIsInstallable] = useState(false)
   const [isInstalled, setIsInstalled] = useState(false)
   const [isStandalone, setIsStandalone] = useState(false)
@@ -66,77 +103,86 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
       setIsInstallable(true)
     }
 
-    // 3. Listen for beforeinstallprompt event (Android / Chromium)
-    const handleBeforeInstallPrompt = (e: Event) => {
-      e.preventDefault()
-      const promptEvent = e as BeforeInstallPromptEvent
-      setDeferredPrompt(promptEvent)
-      setIsPromptReady(true)
-      setIsInstallable(true)
+    // 3. Synchronize prompt state from global/window store
+    const syncPromptState = () => {
+      const win = window as unknown as { __deferredPrompt?: BeforeInstallPromptEvent }
+      const prompt = globalDeferredPrompt || win.__deferredPrompt || null
+      if (prompt) {
+        setDeferredPrompt(prompt)
+        setIsPromptReady(true)
+        setIsInstallable(true)
+        console.log('[PWA] install prompt available:', true)
+      }
     }
-    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
 
-    // 4. Listen for appinstalled event
-    const handleAppInstalled = () => {
+    syncPromptState()
+
+    const handlePromptReady = () => syncPromptState()
+    const handleAppInstalledEvent = () => {
       setDeferredPrompt(null)
+      globalDeferredPrompt = null
+      ;(window as unknown as { __deferredPrompt: null }).__deferredPrompt = null
       setIsPromptReady(false)
       setIsInstalled(true)
       setIsInstallable(false)
       setInstallState('installed')
     }
-    window.addEventListener('appinstalled', handleAppInstalled)
 
-    // 5. Register Service Worker in production or live browser environments
+    window.addEventListener('pwa-prompt-ready', handlePromptReady)
+    window.addEventListener('pwa-installed', handleAppInstalledEvent)
+    window.addEventListener('beforeinstallprompt', handlePromptReady)
+    window.addEventListener('appinstalled', handleAppInstalledEvent)
+
+    // 4. Ensure Service Worker is registered
     if ('serviceWorker' in navigator && window.location.protocol.startsWith('http')) {
-      const registerSW = () => {
-        navigator.serviceWorker
-          .register('/sw.js', { scope: '/' })
-          .then((registration) => {
-            // Check for updates
-            registration.onupdatefound = () => {
-              const installingWorker = registration.installing
-              if (installingWorker) {
-                installingWorker.onstatechange = () => {
-                  if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                    console.log('[PWA] New content is available; please refresh.')
-                  }
-                }
-              }
-            }
-          })
-          .catch((err) => {
-            console.warn('[PWA] Service Worker registration failed:', err)
-          })
-      }
-
-      if (document.readyState === 'complete') {
-        registerSW()
-      } else {
-        window.addEventListener('load', registerSW)
-      }
+      navigator.serviceWorker
+        .register('/sw.js', { scope: '/' })
+        .then((registration) => {
+          console.log('[PWA] Service Worker registered with scope:', registration.scope)
+        })
+        .catch((err) => {
+          console.warn('[PWA] Service Worker registration failed:', err)
+        })
     }
 
     return () => {
       mediaQuery.removeEventListener?.('change', handleMediaChange)
-      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-      window.removeEventListener('appinstalled', handleAppInstalled)
+      window.removeEventListener('pwa-prompt-ready', handlePromptReady)
+      window.removeEventListener('pwa-installed', handleAppInstalledEvent)
+      window.removeEventListener('beforeinstallprompt', handlePromptReady)
+      window.removeEventListener('appinstalled', handleAppInstalledEvent)
     }
   }, [])
 
   const promptInstall = useCallback(async (): Promise<InstallOutcome> => {
+    const win = typeof window !== 'undefined' ? (window as unknown as { __deferredPrompt?: BeforeInstallPromptEvent }) : undefined
+    const activePrompt = deferredPrompt || globalDeferredPrompt || win?.__deferredPrompt || null
+
+    console.log('[PWA] Download App clicked')
+    console.log('[PWA] deferredPrompt:', activePrompt)
+
     if (isStandalone) {
+      console.log('[PWA] Already running in standalone mode')
       return 'dismissed'
     }
 
-    if (deferredPrompt) {
+    // 1. Immediately prioritize native install prompt when available
+    if (activePrompt) {
+      console.log('[PWA] Triggering native PWA installation prompt...')
       setInstallState('installing')
       try {
-        await deferredPrompt.prompt()
-        const choice = await deferredPrompt.userChoice
-        if (choice.outcome === 'accepted') {
+        await activePrompt.prompt()
+        const { outcome } = await activePrompt.userChoice
+        console.log('[PWA] Install prompt outcome:', outcome)
+
+        if (outcome === 'accepted') {
           setIsInstalled(true)
           setIsInstallable(false)
           setDeferredPrompt(null)
+          globalDeferredPrompt = null
+          if (win) {
+            win.__deferredPrompt = undefined
+          }
           setIsPromptReady(false)
           setInstallState('installed')
           return 'accepted'
@@ -145,17 +191,21 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
           return 'dismissed'
         }
       } catch (err) {
-        console.warn('[PWA] Error in promptInstall:', err)
+        console.warn('[PWA] Error calling prompt():', err)
         setInstallState('idle')
         return 'dismissed'
       }
     }
 
+    // 2. iOS fallback: Show Add to Home Screen instructions
     if (isIOS) {
+      console.log('[PWA] iOS Safari detected, showing Add to Home Screen instructions')
       setShowIOSModal(true)
       return 'instructions_shown'
     }
 
+    // 3. Fallback when browser does not support beforeinstallprompt or prompt has not fired
+    console.log('[PWA] Native prompt unavailable in this browser/session')
     setShowHelpModal(true)
     return 'instructions_shown'
   }, [deferredPrompt, isIOS, isStandalone])
@@ -195,4 +245,3 @@ export function PWAProvider({ children }: { children: React.ReactNode }) {
     </PWAContext.Provider>
   )
 }
-

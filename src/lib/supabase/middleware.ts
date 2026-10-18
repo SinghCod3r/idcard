@@ -1,7 +1,15 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/forgot-password', '/set-password', '/auth']
+const PUBLIC_PATHS = [
+  '/login',
+  '/forgot-password',
+  '/set-password',
+  '/auth',
+  '/manifest.webmanifest',
+  '/manifest.json',
+  '/sw.js',
+]
 
 /**
  * Optimistic only: keep the session cookies fresh and bounce clearly
