@@ -197,3 +197,4 @@ export async function compressImage(
     cleanup()
   }
 }
+
