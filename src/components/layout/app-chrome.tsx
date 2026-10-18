@@ -2,7 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useTransition } from 'react'
+import { useEffect, useState, useTransition } from 'react'
+import { DownloadAppButton } from '@/components/pwa/download-app-button'
 import {
   Building2,
   CalendarRange,
@@ -136,19 +137,25 @@ export function AppChrome({
 }) {
   const pathname = usePathname()
   const [isPending, startTransition] = useTransition()
+  const [mobileOpen, setMobileOpen] = useState(false)
   const areaHref = area === 'admin' ? '/admin' : '/app'
+
+  useEffect(() => {
+    setMobileOpen(false)
+  }, [pathname])
 
   const signOut = () => startTransition(() => void signOutAction())
 
   return (
     <div className="min-h-screen bg-muted/20">
-      <aside className="fixed inset-y-0 z-40 hidden w-64 flex-col bg-slate-900 text-white md:flex">
+      <aside className="fixed inset-y-0 z-40 hidden w-64 flex-col bg-slate-900 text-white md:flex pt-[env(safe-area-inset-top,0px)] pb-[env(safe-area-inset-bottom,0px)]">
         <Brand user={user} />
         <div className="flex-1 overflow-y-auto px-3 py-4">
           <NavLinks user={user} areaHref={areaHref} />
         </div>
-        <div className="border-t border-slate-800 p-3">
-          <div className="mb-2 px-2 text-xs text-slate-500">
+        <div className="border-t border-slate-800 p-3 space-y-2">
+          <DownloadAppButton />
+          <div className="px-2 text-xs text-slate-500">
             {ROLE_LABEL[user.role] ?? user.role}
           </div>
           <button
@@ -164,7 +171,7 @@ export function AppChrome({
 
       <div className="flex min-h-screen flex-col md:pl-64">
         <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b bg-background px-4 sm:px-6">
-          <Sheet key={pathname}>
+          <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
             <SheetTrigger
               className={cn(
                 buttonVariants({ variant: 'ghost', size: 'icon' }),
@@ -176,15 +183,20 @@ export function AppChrome({
             </SheetTrigger>
             <SheetContent
               side="left"
-              className="flex flex-col w-72 gap-0 bg-slate-900 p-0 text-white"
+              className="flex flex-col w-72 gap-0 bg-slate-900 p-0 text-white pt-[env(safe-area-inset-top,0px)]"
             >
               <SheetTitle className="sr-only">Menu</SheetTitle>
               <Brand user={user} />
               <div className="flex-1 overflow-y-auto px-3 py-4">
-                <NavLinks user={user} areaHref={areaHref} />
+                <NavLinks
+                  user={user}
+                  areaHref={areaHref}
+                  onNavigate={() => setMobileOpen(false)}
+                />
               </div>
-              <div className="border-t border-slate-800 p-3">
-                <div className="mb-2 px-2 text-xs text-slate-500">
+              <div className="border-t border-slate-800 p-3 pb-[max(1rem,env(safe-area-inset-bottom,0px))] space-y-2">
+                <DownloadAppButton onCloseSidebar={() => setMobileOpen(false)} />
+                <div className="px-2 text-xs text-slate-500">
                   {ROLE_LABEL[user.role] ?? user.role}
                 </div>
                 <button
@@ -232,7 +244,7 @@ export function AppChrome({
           </DropdownMenu>
         </header>
 
-        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">{children}</main>
+        <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8 pb-[max(1.5rem,env(safe-area-inset-bottom,0px))]">{children}</main>
       </div>
     </div>
   )
